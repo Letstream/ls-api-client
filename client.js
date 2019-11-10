@@ -7,8 +7,8 @@ import {
 } from './errors';
 
 
-const REQUEST_POST = 'POST'
-const REQUEST_GET = 'GET'
+export const REQUEST_POST = 'POST'
+export const REQUEST_GET = 'GET'
 
 
 function getAuthorizationHeader(token = null) {
@@ -17,7 +17,7 @@ function getAuthorizationHeader(token = null) {
   return ['Authorization', 'Token ' + token]
 }
 
-function Request(
+export function APIRequest(
   request_method,
   url,
   params = null,
@@ -90,7 +90,7 @@ export function HandleAPIError(err_cd) {
 }
 
 module.exports = {
-  request: Request,
+  request: APIRequest,
   constants: {
     POST: REQUEST_POST,
     GET: REQUEST_GET
