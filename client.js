@@ -3,7 +3,9 @@ import {
   AccessForbiddedError,
   UnauthorizedError,
   UnknownError,
-  NetworkError
+  NetworkError,
+  ServerError,
+  NotFoundError
 } from './errors';
 
 
@@ -65,10 +67,14 @@ export function APIRequest(
       } else {
         let response = error.response
 
-        if (response.status == 403) {
-          throw new AccessForbiddedError()
-        } else if (response.status == 401) {
+        if (response.status == 401){
           throw new UnauthorizedError()
+        } else if (response.status == 403) {
+          throw new AccessForbiddedError()
+        } else if (response.status == 404) {
+          throw new NotFoundError()
+        } else if (response.status == 500) {
+          throw new ServerError()
         } else {
           reject(response)
         }

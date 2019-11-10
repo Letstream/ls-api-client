@@ -1,5 +1,5 @@
 import { APIRequest, REQUEST_POST } from "./client";
-import { NetworkError, AccessForbiddenError, UnauthorizedError } from "./errors";
+import { NetworkError, AccessForbiddenError, UnauthorizedError, ServerError, NotFoundError } from "./errors";
 
 export class LetstreamAPI {
 
@@ -25,16 +25,16 @@ export class LetstreamAPI {
         return (this.base_url)?(this.base_url + url):url
     }
 
-    _send_request(request_type, url, params=null, body=null, headers={}, add_authorization=false, token=null) {
+    _send_request(request_type, url, params=null, body=null, headers={}, add_authorization=false, token=null, ignore_errors=[]) {
         return new Promise( (resolve, reject) => {
-            APIRequest(REQUEST_POST, url, params, body, headers, add_authorization, token).then( (res) => {
+            APIRequest(request_type, url, params, body, headers, add_authorization, token).then( (res) => {
                 resolve(res.data)
             }).catch( (err) => {
-                this.check_known_errors(err)   
+                this.check_known_errors(err, ignore_errors)   
 
                 if(err.status == 400) {
                     // Handle Field Errors
-                    reject(err)
+                    reject(err.data)
                 }
             })
         })
@@ -50,8 +50,28 @@ export class LetstreamAPI {
         return token
     }
 
-    check_known_errors(err){
-        if(err instanceof NetworkError || err instanceof AccessForbiddenError || err instanceof UnauthorizedError)
+    check_known_errors(err, ignore_errors=[]){
+        let known_errors = [
+            AccessForbiddenError,
+            NotFoundError,
+            NetworkError,
+            ServerError,
+            UnauthorizedError,
+        ]
+
+        let flag = true
+        known_errors.forEach(function(value, index) {
+            if(err instanceof value){
+                let ignore = false
+                ignore_errors.forEach(function(e, i) {
+                    if(value == e) 
+                        ignore = true
+                })
+                if (!ignore)
+                    flag = false
+            }
+        })
+        if(!flag)
             throw err
     }
 
