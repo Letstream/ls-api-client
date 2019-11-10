@@ -48,34 +48,30 @@ export function APIRequest(
       method: request_method,
       headers: final_headers
     }).then((response) => {
-      if (response.status >= 200 && response.status <= 202) {
-        let d = response.data;
+      let d = response.data;
 
-        if (d.status) {
-          resolve(d)
-        } else {
-          HandleAPIError(d.err_cd).then((res) => {
-            resolve(d)
-          }, (err) => {
-            reject(res)
-          })
-        }
+      if (d.status) {
+        resolve(d)
       } else {
-        if (response.status == 403) {
-          throw new AccessForbiddedError()
-        } else if (response.status == 401) {
-          throw new UnauthorizedError()
-        } else {
-          throw new UnknownError(response.status)
-        }
+        HandleAPIError(d.err_cd).then((res) => {
+          resolve(d)
+        }, (err) => {
+          reject(res)
+        })
       }
     }, (err) => {
       if (!error.response) {
         throw new NetworkError()
       } else {
-        let e = error.response
-        console.log(e)
-        reject(err);
+        let response = error.response
+
+        if (response.status == 403) {
+          throw new AccessForbiddedError()
+        } else if (response.status == 401) {
+          throw new UnauthorizedError()
+        } else {
+          reject(response)
+        }
       }
     })
   })
