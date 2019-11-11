@@ -87,7 +87,7 @@ export class LetstreamAPI {
         return this._send_request(REQUEST_POST, url, null, payload)
     }
 
-    logout(url, url=null) {
+    logout(url=null) {
         if(!this.token)
             return
         
