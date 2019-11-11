@@ -33,12 +33,13 @@ export function APIRequest(
     let final_headers = headers;
 
     if (add_authorization) {
+      let h = null
       if (!token)
-        let h = getAuthorizationHeader()
+        h = getAuthorizationHeader()
       else if (typeof (token) == 'function')
-        let h = getAuthorizationHeader(token())
+        h = getAuthorizationHeader(token())
       else
-        let h = getAuthorizationHeader(token)
+        h = getAuthorizationHeader(token)
 
       final_headers[h[0]] = h[1];
     }
