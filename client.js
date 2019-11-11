@@ -1,6 +1,6 @@
 import Axios from 'axios';
 import {
-  AccessForbiddedError,
+  AccessForbiddenError,
   UnauthorizedError,
   UnknownError,
   NetworkError,
@@ -71,7 +71,7 @@ export function APIRequest(
         if (response.status == 401){
           throw new UnauthorizedError()
         } else if (response.status == 403) {
-          throw new AccessForbiddedError()
+          throw new AccessForbiddenError()
         } else if (response.status == 404) {
           throw new NotFoundError()
         } else if (response.status == 500) {
@@ -99,7 +99,7 @@ module.exports = {
     GET: REQUEST_GET
   },
   errors: {
-    access_forbidden: AccessForbiddedError,
+    access_forbidden: AccessForbiddenError,
     network: NetworkError,
     unauthorized: UnauthorizedError,
     unknown: UnknownError
