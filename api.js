@@ -3,22 +3,21 @@ import { NetworkError, AccessForbiddenError, UnauthorizedError, ServerError, Not
 
 export class LetstreamAPI {
 
-    urls = {
-        login: '/accounts/login',
-        logout: '/accounts/logout',
-        user: '/accounts/user'
-    }
-
-    errors = {
-        access_forbidden: AccessForbiddenError,
-        network: NetworkError,
-        unauthorized: UnauthorizedError
-    }
-
-
     constructor(base_url, token=null) {
         this.base_url = base_url
         this.token = token
+
+        this.urls = {
+            login: '/accounts/login',
+            logout: '/accounts/logout',
+            user: '/accounts/user'
+        }
+    
+        this.errors = {
+            access_forbidden: AccessForbiddenError,
+            network: NetworkError,
+            unauthorized: UnauthorizedError
+        }
     }
 
     _construct_url(url) {
