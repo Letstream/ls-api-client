@@ -64,18 +64,18 @@ export function APIRequest(
       }
     }, (error) => {
       if (!error.response) {
-        reject(new NetworkError())
+        throw new NetworkError()
       } else {
         let response = error.response
 
         if (response.status == 401){
-          reject(new UnauthorizedError())
+          throw new UnauthorizedError()
         } else if (response.status == 403) {
-          reject(new AccessForbiddenError())
+          throw new AccessForbiddenError()
         } else if (response.status == 404) {
-          reject(new NotFoundError())
+          throw new NotFoundError()
         } else if (response.status == 500) {
-          reject(new ServerError())
+          throw new ServerError()
         } else {
           reject(response)
         }
