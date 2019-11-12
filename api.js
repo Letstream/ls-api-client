@@ -74,15 +74,15 @@ export class LetstreamAPI {
     }
 
     is_data_error(err){
-        if( !err instanceof AccessForbiddenError && 
-            !err instanceof NotFoundError && 
-            !err instanceof NetworkError &&
-            !err instanceof ServerError &&
-            !err instanceof UnauthorizedError &&
-            !err instanceof UnknownError
-        ) return true
+        if( err instanceof AccessForbiddenError || 
+            err instanceof NotFoundError || 
+            err instanceof NetworkError ||
+            err instanceof ServerError ||
+            err instanceof UnauthorizedError ||
+            err instanceof UnknownError
+        ) return false
 
-        return false
+        return true
     }
 
     set_instance_params(params){
