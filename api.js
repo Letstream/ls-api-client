@@ -29,7 +29,7 @@ export class LetstreamAPI {
             APIRequest(request_type, url, params, body, headers, add_authorization, token).then( (res) => {
                 resolve(res.data)
             }).catch( (err) => {
-                this.check_known_errors(err, ignore_errors)   
+                this.check_known_errors(err, reject, ignore_errors)   
 
                 if(err.status == 400) {
                     // Handle Field Errors
@@ -49,7 +49,7 @@ export class LetstreamAPI {
         return token
     }
 
-    check_known_errors(err, ignore_errors=[]){
+    check_known_errors(err, reject, ignore_errors=[]){
         let known_errors = [
             AccessForbiddenError,
             NotFoundError,
@@ -71,7 +71,7 @@ export class LetstreamAPI {
             }
         })
         if(!flag)
-            throw err
+            reject(err)
     }
 
     login(email, password, url=null) {
