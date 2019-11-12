@@ -8,9 +8,9 @@ export class LetstreamAPI {
         this.token = token
 
         this.urls = {
-            login: '/accounts/login',
-            logout: '/accounts/logout',
-            user: '/accounts/user'
+            login: '/accounts/login/',
+            logout: '/accounts/logout/',
+            user: '/accounts/user/'
         }
     
         this.errors = {
