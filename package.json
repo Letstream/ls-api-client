@@ -1,6 +1,6 @@
 {
   "name": "ls-api-client",
-  "version": "1.1.9",
+  "version": "1.1.10",
   "description": "Letstream API Client, intended to be used in combination with Letstream API Backends",
   "main": "client.js",
   "scripts": {

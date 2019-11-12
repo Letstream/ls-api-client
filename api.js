@@ -3,10 +3,11 @@ import { NetworkError, AccessForbiddenError, UnauthorizedError, ServerError, Not
 
 export class LetstreamAPI {
 
-    constructor(base_url, token=null) {
+    constructor(base_url, token=null, error_handler=null, handler_params={instance: null}) {
         this.base_url = base_url
         this.token = token
-
+        this.error_handler = error_handler
+        this.handler_params = handler_params
         this.urls = {
             login: '/accounts/login/',
             logout: '/accounts/logout/',
@@ -29,7 +30,10 @@ export class LetstreamAPI {
             APIRequest(request_type, url, params, body, headers, add_authorization, token).then( (res) => {
                 resolve(res.data)
             }).catch( (err) => {
-                this.check_known_errors(err, reject, ignore_errors)   
+                if(!this.error_handler)
+                    this.check_known_errors(err, reject, ignore_errors)   
+                else
+                    this.error_handler(err, reject, ignore_errors, this.handler_params)
 
                 if(err.status == 400) {
                     // Handle Field Errors
@@ -47,6 +51,10 @@ export class LetstreamAPI {
             token = this.token
         
         return token
+    }
+
+    set_instance_params(params){
+        this.handler_params = params
     }
 
     check_known_errors(err, reject, ignore_errors=[]){
