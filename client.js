@@ -62,7 +62,7 @@ export function APIRequest(
           reject(res)
         })
       }
-    }, (err) => {
+    }, (error) => {
       if (!error.response) {
         throw new NetworkError()
       } else {
