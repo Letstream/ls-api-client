@@ -113,7 +113,7 @@ export class LetstreamAPI {
             request_type: REQUEST_POST, 
             url:url, 
             body:payload,
-            handler_params=handler_params
+            handler_params: handler_params
         })
     }
 
@@ -133,7 +133,7 @@ export class LetstreamAPI {
             url: url,
             add_authorization: true, 
             token: token, 
-            handler_params=handler_params
+            handler_params: handler_params
         })
     }
 
