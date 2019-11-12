@@ -1,4 +1,4 @@
-import { APIRequest, REQUEST_POST } from "./client";
+import { APIRequest, REQUEST_POST, REQUEST_GET } from "./client";
 import { NetworkError, AccessForbiddenError, UnauthorizedError, ServerError, NotFoundError } from "./errors";
 
 export class LetstreamAPI {
