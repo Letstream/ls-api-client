@@ -92,16 +92,3 @@ export function HandleAPIError(err_cd) {
   })
 }
 
-module.exports = {
-  request: APIRequest,
-  constants: {
-    POST: REQUEST_POST,
-    GET: REQUEST_GET
-  },
-  errors: {
-    access_forbidden: AccessForbiddenError,
-    network: NetworkError,
-    unauthorized: UnauthorizedError,
-    unknown: UnknownError
-  }
-}
