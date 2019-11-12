@@ -284,4 +284,83 @@ export class LetstreamAPI {
             handler_params: handler_params
         })
     }
+
+    enable_user({
+        id,
+        authenticated = true,
+        url = null,
+        handler_params = null
+    }) {
+        if(!id)
+            return
+        let token = null, add_authorization = false;
+        if(authenticated){
+            token = this._get_token()
+            add_authorization = true
+        }
+
+        if(!url)
+            url = this._construct_url(this.urls.user + id + '/enable/')
+
+        return this._send_request({
+            request_type: REQUEST_POST, 
+            url: url, 
+            add_authorization: add_authorization, 
+            token: token, 
+            handler_params: handler_params
+        })
+    }
+
+    suspend_user({
+        id,
+        authenticated = true,
+        url = null,
+        handler_params = null
+    }) {
+        if(!id)
+            return
+        let token = null, add_authorization = false;
+        if(authenticated){
+            token = this._get_token()
+            add_authorization = true
+        }
+
+        if(!url)
+            url = this._construct_url(this.urls.user + id + '/suspend/')
+
+        return this._send_request({
+            request_type: REQUEST_POST, 
+            url: url, 
+            add_authorization: add_authorization, 
+            token: token, 
+            handler_params: handler_params
+        })
+    }
+
+    activate_user({
+        id,
+        authenticated = true,
+        url = null,
+        handler_params = null
+    }) {
+        if(!id)
+            return
+        let token = null, add_authorization = false;
+        if(authenticated){
+            token = this._get_token()
+            add_authorization = true
+        }
+
+        if(!url)
+            url = this._construct_url(this.urls.user + id + '/activate/')
+
+        return this._send_request({
+            request_type: REQUEST_POST, 
+            url: url, 
+            add_authorization: add_authorization, 
+            token: token, 
+            handler_params: handler_params
+        })
+    }
+    
 }
