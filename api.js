@@ -1,5 +1,5 @@
 import { APIRequest, REQUEST_POST, REQUEST_GET, REQUEST_DELETE } from "./client";
-import { NetworkError, AccessForbiddenError, UnauthorizedError, ServerError, NotFoundError } from "./errors";
+import { NetworkError, AccessForbiddenError, UnauthorizedError, ServerError, NotFoundError, UnknownError } from "./errors";
 
 export class LetstreamAPI {
 
@@ -16,7 +16,8 @@ export class LetstreamAPI {
         this.urls = {
             login: '/accounts/login/',
             logout: '/accounts/logout/',
-            user: '/accounts/user/'
+            user: '/accounts/user/',
+            register: '/accounts/register/'
         }
     
         this.errors = {
@@ -55,6 +56,8 @@ export class LetstreamAPI {
                 if(err.status == 400) {
                     // Handle Field Errors
                     reject(err.data)
+                } else{
+                    reject( new UnknownError(err))
                 }
             })
         })
@@ -68,6 +71,18 @@ export class LetstreamAPI {
             token = this.token
         
         return token
+    }
+
+    is_data_error(err){
+        if( !err instanceof AccessForbiddenError && 
+            !err instanceof NotFoundError && 
+            !err instanceof NetworkError &&
+            !err instanceof ServerError &&
+            !err instanceof UnauthorizedError &&
+            !err instanceof UnknownError
+        ) return true
+
+        return false
     }
 
     set_instance_params(params){
@@ -121,7 +136,7 @@ export class LetstreamAPI {
         if(!this.token)
             return
         
-        token = this._get_token()
+        let token = this._get_token()
         if(!token)
             return
         
@@ -132,6 +147,32 @@ export class LetstreamAPI {
             request_type: REQUEST_POST, 
             url: url,
             add_authorization: true, 
+            token: token, 
+            handler_params: handler_params
+        })
+    }
+
+    register({
+        data= {},
+        authenticated= false,
+        url=null,
+        handler_params=null
+    } = {}) {
+        
+        let token = null, add_authorization = false;
+        if(authenticated){
+            token = this._get_token()
+            add_authorization = true
+        }
+
+        if(!url)
+            url = this._construct_url(this.urls.register)
+
+        return this._send_request({
+            request_type: REQUEST_POST, 
+            url: url, 
+            body: data,
+            add_authorization: add_authorization, 
             token: token, 
             handler_params: handler_params
         })
@@ -158,6 +199,32 @@ export class LetstreamAPI {
         return this._send_request({
             request_type: REQUEST_GET, 
             url: url, 
+            add_authorization: add_authorization, 
+            token: token, 
+            handler_params: handler_params
+        })
+    }
+
+    create_user({
+        data= {},
+        authenticated= true,
+        url=null,
+        handler_params=null
+    } = {}) {
+        
+        let token = null, add_authorization = false;
+        if(authenticated){
+            token = this._get_token()
+            add_authorization = true
+        }
+
+        if(!url)
+            url = this._construct_url(this.urls.user)
+
+        return this._send_request({
+            request_type: REQUEST_POST, 
+            url: url, 
+            body: data,
             add_authorization: add_authorization, 
             token: token, 
             handler_params: handler_params

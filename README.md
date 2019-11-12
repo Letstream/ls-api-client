@@ -26,6 +26,6 @@ TBD
 
 **License:** GPL-V3
 
-**Version:** 1.1.14
+**Version:** 1.1.15
 
 This project is maintained by [Letstream<sup>&reg;</sup>](https://www.theletstream.com) (Letstream Ventures Private Limited)
