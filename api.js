@@ -1,4 +1,4 @@
-import { APIRequest, REQUEST_POST, REQUEST_GET } from "./client";
+import { APIRequest, REQUEST_POST, REQUEST_GET, REQUEST_DELETE } from "./client";
 import { NetworkError, AccessForbiddenError, UnauthorizedError, ServerError, NotFoundError } from "./errors";
 
 export class LetstreamAPI {
@@ -157,6 +157,60 @@ export class LetstreamAPI {
 
         return this._send_request({
             request_type: REQUEST_GET, 
+            url: url, 
+            add_authorization: add_authorization, 
+            token: token, 
+            handler_params: handler_params
+        })
+    }
+
+    save_user({
+        id,
+        data= {},
+        authenticated= true,
+        url=null,
+        handler_params=null
+    } = {}) {
+        if(!id)
+            return
+        let token = null, add_authorization = false;
+        if(authenticated){
+            token = this._get_token()
+            add_authorization = true
+        }
+
+        if(!url)
+            url = this._construct_url(this.urls.user + id + '/')
+
+        return this._send_request({
+            request_type: REQUEST_POST, 
+            url: url, 
+            body: data,
+            add_authorization: add_authorization, 
+            token: token, 
+            handler_params: handler_params
+        })
+    }
+
+    delete_user({
+        id,
+        authenticated = true,
+        url = null,
+        handler_params = null
+    } = {}) {
+        if(!id)
+            return
+        let token = null, add_authorization = false;
+        if(authenticated){
+            token = this._get_token()
+            add_authorization = true
+        }
+
+        if(!url)
+            url = this._construct_url(this.urls.user + id + '/')
+
+        return this._send_request({
+            request_type: REQUEST_DELETE, 
             url: url, 
             add_authorization: add_authorization, 
             token: token, 
