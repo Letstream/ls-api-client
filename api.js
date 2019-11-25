@@ -7,9 +7,13 @@ export class LetstreamAPI {
         base_url, 
         token=null, 
         error_handler=null, 
-        default_handler_params=null
+        default_handler_params=null,
+        csrf=null,
+        base_auth_url=null
     } = {}) {
         this.base_url = base_url
+        this.base_auth_url = base_auth_url
+        this.csrf = csrf
         this.token = token
         this.error_handler = error_handler
         this.handler_params = default_handler_params
@@ -17,7 +21,13 @@ export class LetstreamAPI {
             login: '/accounts/login/',
             logout: '/accounts/logout/',
             user: '/accounts/user/',
-            register: '/accounts/register/'
+            register: '/accounts/register/',
+            is_authenticated: '/accounts/is-authenticated/',
+        }
+
+        this.native_auth_urls = {
+            login: 'accounts/auth/login/',
+            logout: 'accounts/auth/logout/',
         }
     
         this.errors = {
@@ -29,6 +39,10 @@ export class LetstreamAPI {
 
     _construct_url(url) {
         return (this.base_url)?(this.base_url + url):url
+    }
+
+    _construct_current_host(){
+        return window.location.protocol + "//" + window.location.hostname + ((window.location.port)?(":" + window.location.port):"")
     }
 
     _send_request({
@@ -43,14 +57,17 @@ export class LetstreamAPI {
         handler_params=null
     } = {}) {
         return new Promise( (resolve, reject) => {
-            APIRequest(request_type, url, params, body, headers, add_authorization, token).then( (res) => {
+            APIRequest(request_type, url, params, body, headers, add_authorization, token, this.csrf).then( (res) => {
                 resolve(res.data)
             }).catch( (err) => {
                 if(!this.error_handler)
                     this.check_known_errors(err, reject, ignore_errors)   
                 else{
                     handler_params = (handler_params)?handler_params:this.handler_params
-                    this.error_handler(err, reject, ignore_errors, handler_params)
+                    if(handler_params)
+                        this.error_handler(err, reject, ignore_errors, handler_params)
+                    else
+                        this.error_handler(err, reject, ignore_errors)  
                 }
 
                 if(err.status == 400) {
@@ -114,6 +131,23 @@ export class LetstreamAPI {
             reject(err)
     }
 
+    is_authenticated({url=null, handler_params=null}={}){
+        if(!url)
+            url = this._construct_url(this.urls.is_authenticated)
+        
+        return this._send_request({
+            request_type: REQUEST_GET,
+            url: url,
+            handler_params: handler_params
+        })
+    }
+
+    login_native({to=null, url=null}={}){
+        if(!url)
+            url = this.base_auth_url
+        window.location.href = url + this.native_auth_urls.login + "?next=" + this._construct_current_host() + (to?to:'')
+    }
+
     login({email, password, url=null, handler_params=null}={}) {
 
         if(!url)
@@ -130,6 +164,12 @@ export class LetstreamAPI {
             body:payload,
             handler_params: handler_params
         })
+    }
+
+    logout_native({to=null, url=null}={}){
+        if(!url)
+            url = this.base_auth_url
+        window.location.href = url + this.native_auth_urls.logout + "?next=" + this._construct_current_host() + (to?to:'')
     }
 
     logout({url=null, handler_params=null} = {}) {

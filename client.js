@@ -26,8 +26,8 @@ export function APIRequest(
   data = null,
   headers = {},
   add_authorization = true,
-  token = null
-
+  token = null,
+  csrf = null
 ) {
   return new Promise((resolve, reject) => {
     let final_headers = headers;
@@ -44,12 +44,23 @@ export function APIRequest(
       final_headers[h[0]] = h[1];
     }
 
+    if (csrf) {
+      let h = null
+      if (typeof (csrf) == 'function')
+        h = csrf()
+      else
+        h = csrf
+
+      final_headers['X-CSRFToken'] = h;
+    }
+
     Axios({
       url: url,
       data: data,
       params: params,
       method: request_method,
-      headers: final_headers
+      headers: final_headers,
+      withCredentials: true
     }).then((response) => {
       let d = response.data;
 
