@@ -28,6 +28,8 @@ export class LetstreamAPI {
         this.native_auth_urls = {
             login: 'accounts/auth/login/',
             logout: 'accounts/auth/logout/',
+            register: 'accounts/auth/register/',
+            forgotPassword: 'accounts/auth/password-reset/',
         }
     
         this.errors = {
