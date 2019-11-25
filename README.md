@@ -5,7 +5,7 @@ Letstream API Client is a wrapper over Axios to automatically handle the errors 
 ## How to install
 
 ```
-npm install --save ls-api-client
+npm install --save @letstream/ls-api-client
 ```
 
 ## How to Use
