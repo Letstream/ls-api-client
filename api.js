@@ -144,10 +144,12 @@ export class LetstreamAPI {
         })
     }
 
-    login_native({to=null, url=null}={}){
+    login_native({to=null, url=null, auth_path=null}={}){
         if(!url)
             url = this.base_auth_url
-        window.location.href = url + this.native_auth_urls.login + "?next=" + this._construct_current_host() + (to?to:'')
+        if(!auth_path)
+            auth_path = this.native_auth_urls.login
+        window.location.href = url + auth_path + "?next=" + this._construct_current_host() + (to?to:'')
     }
 
     login({email, password, url=null, handler_params=null}={}) {
