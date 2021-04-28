@@ -16,6 +16,10 @@ export const REQUEST_DELETE = 'DELETE'
 function getAuthorizationHeader(token = null) {
   if (!token)
     token = localStorage.getItem('token')
+  
+  if(!token) {
+    return []
+  }
   return ['Authorization', 'Token ' + token]
 }
 
@@ -40,8 +44,9 @@ export function APIRequest(
         h = getAuthorizationHeader(token())
       else
         h = getAuthorizationHeader(token)
-
-      final_headers[h[0]] = h[1];
+      if(h && h.length > 1) {
+        final_headers[h[0]] = h[1];
+      }
     }
 
     if (csrf) {
